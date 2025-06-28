@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Upload Free</title>
+  <style>/* global */</style>
+</head>
+<body>
+  <div class="container">
+    <h2>Upload Free .tnl File</h2>
+    <input id="fileInput" type="file" accept=".tnl"/>
+    <button onclick="upload()">Upload</button>
+    <p id="msg"></p>
+    <p><a href="dashboard.html">← Back to Dashboard</a></p>
+  </div>
+
+  <script>
+    async function upload() {
+      const f = document.getElementById('fileInput').files[0];
+      const msg = document.getElementById('msg');
+      if (!f) { msg.innerText='Select a file.'; return; }
+      const fd = new FormData(); fd.append('file', f);
+      try {
+        const res = await fetch('http://localhost:3000/upload',{
+          method:'POST',
+          headers:{'Authorization':'Bearer '+localStorage.getItem('token')},
+          body:fd
+        });
+        const d = await res.json();
+        if (!res.ok) throw new Error(d.error||'Upload failed');
+        msg.style.color='green'; msg.innerText='Uploaded!';
+      } catch(err) {
+        msg.style.color='red'; msg.innerText=err.message;
+      }
+    }
+  </script>
+</body>
+</html>
