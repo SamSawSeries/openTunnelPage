@@ -1,0 +1,15 @@
+<!DOCTYPE html><html><head><!-- ... --></head><body>
+  <div class="container">
+    <h2>My Profile</h2>
+    <p id="email">Email: …</p>
+    <button onclick="load()">Refresh</button>
+    <p><a href="dashboard.html">← Back</a></p>
+  </div>
+  <script>
+    async function load() {
+      // if you have a /me endpoint, fetch and fill in
+      document.getElementById('email').innerText = 'Email: (from token)';
+    }
+    load();
+  </script>
+</body></html>
