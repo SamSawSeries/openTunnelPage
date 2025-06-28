@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Free Files</title>
+  <style>/* global */</style>
+</head>
+<body>
+  <div class="container">
+    <h2>Available Free Files</h2>
+    <div id="list">Loading…</div>
+    <p><a href="dashboard.html">← Back to Dashboard</a></p>
+  </div>
+
+  <script>
+    async function load() {
+      try {
+        const res = await fetch('http://localhost:3000/api/freefiles');
+        const { files } = await res.json();
+        const list = document.getElementById('list');
+        if (!files.length) { list.innerHTML='<p>No free files.</p>'; return; }
+        list.innerHTML = files.map(f =>
+          `<div class="file-card">
+             <span>${f.file_key}</span>
+             <a href="${f.file_url}" download>⬇️</a>
+           </div>`
+        ).join('');
+      } catch {
+        document.getElementById('list').innerHTML='<p>Error.</p>';
+      }
+    }
+    load();
+  </script>
+</body>
+</html>
