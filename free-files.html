@@ -7,9 +7,11 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            margin: 20px 8px;
+            margin: 20px;
+            margin-left: 8px;
+            margin-right: 8px;
             background-color: #f4f4f4;
-            text-align: center;
+            text-align: center;#42445A
         }
         .container {
             max-width: 500px;
@@ -19,23 +21,36 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        h2, h3 {
+        h2 {
             color: #333;
         }
-        button, .upload-label {
-            margin-top: 10px;
+        input[type="file"] {
+            display: none;
+        }
+        .upload-label {
+            display: inline-block;
             padding: 10px 20px;
-            border: none;
+            background: #007bff;
+            color: #fff;
             border-radius: 5px;
             cursor: pointer;
             transition: background 0.3s;
         }
+        .upload-label:hover {
+            background: #0056b3;
+        }
         button {
-            background: #007bff;
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            background: #28a745;
             color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
         }
         button:hover {
-            background: #0056b3;
+            background: #218838;
         }
         .file-list {
             margin-top: 15px;
@@ -58,33 +73,41 @@
         .file-icon {
             width: 35px;
             height: 35px;
-            margin-right: 10px;
+            margin-right: 5px;
             flex-shrink: 0;
         }
         .file-info {
             flex-grow: 1;
-            text-align: left;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
         .file-name {
             font-weight: bold;
             white-space: nowrap;
             overflow: hidden;
+            margin-bottom: 3px;
             text-overflow: ellipsis;
+            max-width: 200px; /* Prevents spanning down */
         }
         .file-details {
             font-size: 13px;
             color: #555;
-            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
         }
         .download-icon {
+            font-size: 10px;
             text-decoration: none;
-            color: #28a745;
-            font-size: 1.2em;
-            margin-left: 10px;
+            color: #007bff;
+            margin-left: 5px;
             transition: color 0.3s;
+            flex-shrink: 0;
         }
         .download-icon:hover {
-            color: #218838;
+            color: #0056b3;
         }
     </style>
 </head>
