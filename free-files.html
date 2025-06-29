@@ -119,7 +119,7 @@
             message.innerText = '';
 
             try {
-                const res = await fetch(`${API_BASE}/api/freefiles`);
+                const res = await fetch(`${API_BASE}/api/paidfiles`);
                 const data = await res.json();
                 const files = data.files;
 
