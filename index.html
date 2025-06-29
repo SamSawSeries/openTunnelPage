@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+  <style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; }
+
+    
+    /* First Navbar: Hamburger + Brand + Dropdown */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #333;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      position: relative;
+    }
+    .navbar .brand {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+    .navbar .hamburger {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      width: 24px;
+      height: 18px;
+      justify-content: space-between;
+    }
+    .navbar .hamburger span {
+      display: block;
+      height: 3px;
+      background-color: #fff;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    .navbar .menu {
+      display: none;
+      flex-direction: column;
+      background-color: #333;
+      position: absolute;
+      top: 56px;
+      right: 1rem;
+      width: 200px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .navbar .menu a {
+      color: #fff;
+      padding: 0.75rem 1rem;
+      text-decoration: none;
+      border-bottom: 1px solid #444;
+    }
+    .navbar .menu a:last-child { border-bottom: none; }
+    .navbar .menu a:hover { background-color: #444; }
+    .navbar.active .menu { display: flex; }
+    @media(min-width: 768px) {
+      .navbar .hamburger { display: none; }
+      .navbar .menu {
+        display: flex !important;
+        position: static;
+        flex-direction: row;
+        background: transparent;
+        width: auto;
+      }
+      .navbar .menu a { border: none; padding: 0 1rem; }
+    }
+
+      
+      
+      
+      
+      /* Second Navbar: Horizontal Scrollable */
+    .navbar1 {
+      display: flex;
+      align-items: center;
+      background-color: #444;
+      padding: 0.5rem 1rem;
+    }
+    .navbar1 .brand1 {
+      color: #fff;
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-right: 1rem;
+      flex: 0 0 auto;
+    }
+    .navbar1 .menu-wrapper {
+      flex: 1 1 auto;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .navbar1 .menu {
+      display: flex;
+      gap: 1rem;
+      white-space: nowrap;
+    }
+    .navbar1 .menu a {
+      color: #fff;
+      text-decoration: none;
+      padding: 0.5rem 0;
+      flex: 0 0 auto;
+    }
+    .navbar1 .menu a:hover { text-decoration: underline; }
+    .navbar1 .menu-wrapper {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.5) transparent;
+    }
+    .navbar1 .menu-wrapper::-webkit-scrollbar { height: 6px; }
+    .navbar1 .menu-wrapper::-webkit-scrollbar-thumb {
+      background-color: rgba(255,255,255,0.5);
+      border-radius: 3px;
+    }
+    @media (min-width: 768px) {
+      .navbar1 { justify-content: flex-start; }
+      .navbar1 .menu-wrapper { overflow-x: visible; }
+    }
+    
+    
+    
+    
+    
+    /* Third Navbar: Colored Buttons */
+    .navbar2 {
+      display: flex;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      background-color: #fff;
+      padding: 0.5rem 0;
+      gap: 1rem;
+    }
+    .navbar2 .btn {
+      flex: 0 0 auto;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-red { background-color: #e74c3c; }
+    .btn-green { background-color: #27ae60; }
+    .btn-blue { background-color: #2980b9; }
+    .btn-orange { background-color: #e67e22; }
+  
+      
+      
+      
+      /* Fourth Navbar: Two Action Buttons */
+    .navbar3 {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #222;
+      padding: 0.5rem;
+      gap: 1rem;
+    }
+    .navbar3 .btn-buy,
+    .navbar3 .btn-create {
+      flex: 1 1 auto;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn-buy { background-color: #16a085; }
+    .btn-create { background-color: #8e44ad; }
+    @media (min-width: 767px) {
+      .navbar3 { flex-wrap: wrap; }
+      .navbar3 .btn-buy,
+      .navbar3 .btn-create { flex: 0 0 48%; }
+    }
+    
+    
+    
+    /* Footer */
+    .footer { background-color: #333; color: #fff; text-align: center; padding: 1rem; font-size: 0.9rem; }
+ 
+  </style>
+  
+  
+  <!-- First Navbar -->
+<header class="navbar">
+  <div class="brand">OpenTunnelFiles.store</div>
+  <div class="hamburger" id="hamburger">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <nav class="menu" id="menu">
+    <a href="#">Home</a>
+    <a href="#">Free Files</a>
+    <a href="#">Paid Files</a>
+    <a href="#">File Creator</a>
+    <a href="#">Buy Config Files</a>
+    <a href="#">Updates</a>
+  </nav>
+</header>
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const navbar = document.querySelector('.navbar');
+  const menu = document.getElementById('menu');
+  
+  hamburger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    navbar.classList.toggle('active');
+  });
+  
+  // Close menu when clicking outside
+  document.addEventListener('click', (e) => {
+    if (navbar.classList.contains('active') && !navbar.contains(e.target)) {
+      navbar.classList.remove('active');
+    }
+  });
+  
+  // Prevent clicks inside menu from closing
+  menu.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+</script>
+
+<!-- Third Navbar: Colored Buttons -->
+<nav style="background-color: black;" class="navbar2">
+  <button class="btn btn-red">Free Files</button>
+  <button class="btn btn-green">Paid Files</button>
+  <button class="btn btn-blue">File Creator</button>
+  <button class="btn btn-orange">Buy Config Files</button>
+</nav>
+<div style="background-color: #8e44ad;">
+<img style="margin-left: 5%; margin-top: 5px;" width="90%" src="/20250622_183541.png" alt="OpenTunnelFiles.store Ads">
+</div>
+
+<!-- Second Navbar -->
+<nav class="navbar1">
+  
+  <div class="menu-wrapper">
+    <div class="menu">
+      <a href="#">OpenTunnel</a>
+      <a href="#">HTTP Injector</a>
+      <a href="#">SocksHTTP</a>
+      <a href="#">Zivpn</a>
+      <a href="#">NPV-Tunnel</a>
+      <a href="#">HTTP-Customs</a>
+      <a href="#">File Developer</a>
+      <a href="#">Updates</a>
+    </div>
+  </div>
+</nav>
+<style>
+  /* Card Grid */
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      padding: 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 150px;
+    }
+    .card img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: cover;
+    }
+    @media(min-width: 768px) {
+      .card-container {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      
+    }
+</style>
+
+<!-- Card Views -->
+<section class="card-container">
+  <div class="card"><img src="/20250625_143039.png" alt="Card 1"></div>
+  <div class="card"><img src="/20250625_143114.png" alt="Card 2"></div>
+  <div class="card"><img src="/20250625_143151.png" alt="Card 3"></div>
+  <div class="card"><img src="/20250625_143250.jpg" alt="Card 4"></div>
+  
+</section>
+
+<!-- Fourth Navbar: Buy & Create -->
+  <nav style="background-color: burlywood;" class="navbar3">
+    <button class="btn-buy">Buy Config Files</button>
+    <button class="btn-create">File Creator</button>
+  </nav>
+  
+  <nav style="background-color: burlywood;" class="navbar3">
+  <button style="background-color: yellow; color: black;" class="btn-buy">Buy MTN Data Bundles</button>
+  <button style="background-color: yellow; color: black;" class="btn-create">Buy MTN JUST4U Bundles</button>
+</nav>
+
+<nav class="navbar3">
+  <button class="btn-buy">Buy Telecel Data Bundles</button>
+  <button class="btn-create">Get AFA call Bundles</button>
+</nav>
+
+<nav class="navbar3">
+  <button class="btn-buy">Get your customize Data Bundle website</button>
+  <button class="btn-create">Get your customize website</button>
+</nav>
+
+
+
+<!-- Footer -->
+<footer class="footer">
+  &copy; 2025 OpenTunnelFiles.store. All rights reserved.
+</footer>
+</body>
+
+</html>
