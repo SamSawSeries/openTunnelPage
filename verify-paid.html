@@ -1,0 +1,66 @@
+<!-- verify-paid.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verifying Subscription…</title>
+  <style>
+    body { margin: 0; padding: 0; font-family: Arial, sans-serif; background: #f4f4f4; display: flex; align-items: center; justify-content: center; height: 100vh; }
+    .card { background: #fff; padding: 24px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; max-width: 360px; width: 90%; }
+    h2 { margin-bottom: 12px; color: #333; }
+    p { margin-bottom: 16px; }
+    .msg { color: #d9534f; min-height: 1.2em; }
+    .btn { display: inline-block; padding: 10px 20px; margin-top: 12px; background: #007bff; color: #fff; border-radius: 6px; text-decoration: none; transition: background 0.3s; }
+    .btn:hover { background: #0056b3; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Finalizing Your Subscription</h2>
+    <p id="status">Please wait while we verify your payment…</p>
+    <div id="msg" class="msg"></div>
+    <a href="subscribe-paid.html" id="retry" class="btn" style="display:none;">Try Again</a>
+  </div>
+
+  <script>
+    (async () => {
+      const API_BASE = 'https://opentunnelfiles99.onrender.com';
+      const statusEl = document.getElementById('status');
+      const msgEl    = document.getElementById('msg');
+      const retryBtn = document.getElementById('retry');
+
+      // Get reference from URL or fallback to localStorage
+      const params = new URLSearchParams(location.search);
+      let reference = params.get('reference') || params.get('trxref');
+      if (!reference) reference = localStorage.getItem('payRef');
+
+      if (!reference) {
+        statusEl.textContent = 'No payment reference found.';
+        msgEl.textContent = 'Please retry subscription.';
+        retryBtn.style.display = 'inline-block';
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/verify-payment2?reference=${reference}`);
+        const data = await res.json();
+        if (!res.ok || !data.paid) throw new Error(data.error || 'Payment not successful');
+
+        // On success: flag user and clear stored ref
+        localStorage.setItem('paidUser', 'true');
+        localStorage.removeItem('payRef');
+        statusEl.textContent = 'Subscription activated!';
+
+        // Redirect to paid files
+        setTimeout(() => window.location.href = 'paid-files.html', 1500);
+      } catch (err) {
+        statusEl.textContent = 'Verification failed';
+        msgEl.textContent = err.message;
+        retryBtn.style.display = 'inline-block';
+        console.error(err);
+      }
+    })();
+  </script>
+</body>
+</html>
