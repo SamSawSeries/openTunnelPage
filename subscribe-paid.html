@@ -1,0 +1,72 @@
+<!-- subscribe-paid.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Subscribe for Paid Access</title>
+  <style>
+    body, html { margin: 0; padding: 0; height: 100%; font-family: Arial, sans-serif; background: #f4f4f4; }
+    .container {
+      max-width: 400px; margin: 80px auto; background: #fff; padding: 20px;
+      border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;
+    }
+    input, button {
+      width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #ccc; font-size: 1rem;
+    }
+    button {
+      background: #28a745; color: #fff; border: none; cursor: pointer; transition: background 0.3s;
+    }
+    button:hover { background: #218838; }
+    .msg { color: #d9534f; min-height: 1.2em; }
+    a.back { display: block; margin-top: 10px; color: #007bff; text-decoration: none; }
+    a.back:hover { color: #0056b3; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Get Paid File Access</h2>
+    <p>Pay ₵ 10 to view &amp; download paid configs.</p>
+    <input id="email" type="email" placeholder="Enter your email" />
+    <button onclick="initializePayment()">Pay ₵ 10</button>
+    <div id="msg" class="msg"></div>
+    <a href="dashboard.html" class="back">← Back to Dashboard</a>
+  </div>
+
+  <script>
+    const API_BASE = 'https://opentunnelfiles99.onrender.com';
+
+    async function initializePayment() {
+      const email = document.getElementById('email').value.trim();
+      const msg = document.getElementById('msg');
+      msg.textContent = '';
+
+      if (!email) {
+        msg.textContent = 'Please enter your email.';
+        return;
+      }
+
+      try {
+        const callback_url = `${location.origin}/verify-paid.html`;
+        const res = await fetch(`${API_BASE}/initialize-payment2`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, callback_url })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Payment init failed');
+
+        // Store reference for fallback
+        localStorage.setItem('payRef', data.reference);
+        // Redirect to Paystack checkout
+        window.location.href = data.authorization_url;
+      } catch (err) {
+        msg.textContent = err.message;
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>
+
+
