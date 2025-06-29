@@ -21,7 +21,7 @@
       if (!f) { msg.innerText='Select a file.'; return; }
       const fd = new FormData(); fd.append('file', f);
       try {
-        const res = await fetch('https://opentunnelfiles99.onrender.com/upload',{
+        const res = await fetch('https://opentunnelfiles99.onrender.com/upload2',{
           method:'POST',
           headers:{'Authorization':'Bearer '+localStorage.getItem('token')},
           body:fd
