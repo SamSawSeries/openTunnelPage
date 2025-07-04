@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Paid Files – TunnelShare</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px 8px; background: #f4f4f4; text-align: center; }
+    .container {
+      max-width: 500px; margin: auto; background: #fff; padding: 20px;
+      border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    h2, h3 { color: #333; }
+    .file-list { margin-top: 15px; }
+    .file-card {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px; margin: 10px 0; background: white; border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .download-icon {
+      font-size: 1.2em; color: #007bff; text-decoration: none;
+    }
+    .download-icon:hover { color: #0056b3; }
+    .msg { color: #d9534f; min-height: 1.2em; margin: 10px 0; }
+    button { 
+      margin-top: 10px; padding: 10px 20px; border: none; 
+      background: #007bff; color: white; border-radius: 5px; cursor: pointer; 
+      transition: background 0.3s;
+    }
+    button:hover { background: #0056b3; }
+    a.back { display: inline-block; margin-top: 12px; color: #007bff; text-decoration: none; }
+    a.back:hover { color: #0056b3; }
+  </style>
+</head>
+<body>
+  <script>
+    // 1. Grab token (loginPaidUser must have set this)
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (!token) {
+      // No token → redirect to paid-user login
+      alert('Please log in to access paid files.');
+      window.location.href = 'login-paid.html';
+    }
+  </script>
+
+  <div class="container">
+    <h2>Available Paid Tunnel Configs</h2>
+    <div id="msg" class="msg"></div>
+    <h3>Files</h3>
+    <div id="fileList" class="file-list"></div>
+    <button onclick="loadPaidFiles()">Refresh List</button>
+    <p><a href="dashboard.html" class="back">← Back to Dashboard</a></p>
+  </div>
+
+  <script>
+    const API_BASE = 'https://opentunnelfiles99.onrender.com';
+
+    async function loadPaidFiles() {
+      const msgEl = document.getElementById('msg');
+      const listEl = document.getElementById('fileList');
+      msgEl.textContent = '';
+      listEl.innerHTML = '<p>Loading…</p>';
+
+      try {
+        const res = await fetch(`${API_BASE}/api/paidfiles`, {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+
+        if (res.status === 401) {
+          // Invalid or expired token
+          msgEl.textContent = 'Session expired. Please log in again.';
+          setTimeout(() => window.location.href = 'login-paid.html', 1500);
+          return;
+        }
+        if (res.status === 402) {
+          // Your API might use 402 for payment required
+          msgEl.textContent = 'Access denied. Please subscribe first.';
+          setTimeout(() => window.location.href = 'subscribe-paid.html', 1500);
+          return;
+        }
+
+        const { files } = await res.json();
+        if (!files || !files.length) {
+          listEl.innerHTML = '<p>No paid files available.</p>';
+          return;
+        }
+
+        // Render list
+        listEl.innerHTML = '';
+        files.forEach(f => {
+          const card = document.createElement('div');
+          card.className = 'file-card';
+          card.innerHTML = `
+            <span>${f.file_key}</span>
+            <a href="${f.file_url}" download class="download-icon">⬇️</a>
+          `;
+          listEl.appendChild(card);
+        });
+
+      } catch (err) {
+        msgEl.textContent = "Network/error fetching files.";
+        console.error(err);
+      }
+    }
+
+    // Auto-load when page is ready
+    window.onload = loadPaidFiles;
+  </script>
+</body>
+</html>
