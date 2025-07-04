@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paid User Login – TunnelShare</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f4f8; }
+    .login-container {
+      display: flex; justify-content: center; align-items: center;
+      height: 100%; padding: 20px;
+    }
+    .login-card {
+      background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 100%; max-width: 400px; padding: 30px; text-align: center;
+    }
+    .login-card h2 { margin-bottom: 20px; color: #333; font-size: 1.5rem; }
+    .form-group { margin-bottom: 18px; text-align: left; }
+    .form-group label { display: block; margin-bottom: 6px; color: #555; font-size: 0.9rem; }
+    .form-group input {
+      width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px;
+      font-size: 1rem; transition: border-color 0.2s;
+    }
+    .form-group input:focus { outline: none; border-color: #007bff; }
+    .btn {
+      width: 100%; padding: 12px; background: #007bff; color: #fff; border: none;
+      border-radius: 6px; font-size: 1rem; cursor: pointer; transition: background 0.3s;
+    }
+    .btn:hover { background: #0056b3; }
+    .error-msg { color: #d9534f; font-size: 0.9rem; margin: 10px 0; min-height: 1.2em; }
+    a.back { display: inline-block; margin-top: 12px; color: #007bff; text-decoration: none; }
+    a.back:hover { color: #0056b3; }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-card">
+      <h2>Login for Paid Users</h2>
+      <div id="loginMsg" class="error-msg"></div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="you@example.com" />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter your password" />
+      </div>
+
+      <button class="btn" onclick="loginPaidUser()">Login & Continue</button>
+
+      <a href="subscribe-paid.html" class="back">← Back to Subscription</a>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'https://opentunnelfiles99.onrender.com';
+
+    async function loginPaidUser() {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const msg = document.getElementById('loginMsg');
+      msg.textContent = '';
+
+      if (!email || !password) {
+        msg.textContent = 'Please enter both email and password.';
+        return;
+      }
+
+      try {
+        // Paid users login endpoint (/login2)
+        const res = await fetch(`${API_BASE}/login2`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Login failed');
+
+        // Store JWT
+        localStorage.setItem('token', data.token);
+
+        // Redirect to paid files
+        window.location.href = 'paid-files.html';
+
+      } catch (err) {
+        msg.textContent = err.message.includes('Failed to fetch')
+          ? "Can't connect to server—check network/CORS."
+          : err.message;
+      }
+    }
+  </script>
+</body>
+</html>
