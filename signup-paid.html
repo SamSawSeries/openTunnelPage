@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paid User Signup – TunnelShare</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f4f8; }
+    .signup-container {
+      display: flex; justify-content: center; align-items: center;
+      height: 100%; padding: 20px;
+    }
+    .signup-card {
+      background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 100%; max-width: 400px; padding: 30px; text-align: center;
+    }
+    .signup-card h2 {
+      margin-bottom: 20px; color: #333; font-size: 1.5rem;
+    }
+    .form-group { margin-bottom: 18px; text-align: left; }
+    .form-group label {
+      display: block; margin-bottom: 6px; color: #555; font-size: 0.9rem;
+    }
+    .form-group input {
+      width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px;
+      font-size: 1rem; transition: border-color 0.2s;
+    }
+    .form-group input:focus { outline: none; border-color: #007bff; }
+    .btn {
+      width: 100%; padding: 12px; background: #28a745; color: #fff; border: none;
+      border-radius: 6px; font-size: 1rem; cursor: pointer; transition: background 0.3s;
+    }
+    .btn:hover { background: #218838; }
+    .error-msg { color: #d9534f; font-size: 0.9rem; margin: 10px 0; min-height: 1.2em; }
+    .success-msg { color: #28a745; font-size: 0.9rem; margin: 10px 0; min-height: 1.2em; }
+    a.back { display: inline-block; margin-top: 12px; color: #007bff; text-decoration: none; }
+    a.back:hover { color: #0056b3; }
+  </style>
+</head>
+<body>
+  <div class="signup-container">
+    <div class="signup-card">
+      <h2>Sign Up for Paid Access</h2>
+      <div id="message" class="error-msg"></div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="you@example.com" />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Create a password" />
+      </div>
+      <button class="btn" onclick="signupPaid()">Sign Up & Continue</button>
+      <div id="success" class="success-msg"></div>
+      <a href="login-paid.html" class="back">← Already have an account? Login</a>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'https://opentunnelfiles99.onrender.com';
+
+    async function signupPaid() {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const messageEl = document.getElementById('message');
+      const successEl = document.getElementById('success');
+      messageEl.textContent = '';
+      successEl.textContent = '';
+
+      if (!email || !password) {
+        messageEl.textContent = 'Please fill in both email and password.';
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/signup2`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Signup failed');
+
+        successEl.textContent = 'Registration successful! Redirecting to login…';
+        setTimeout(() => window.location.href = 'login-paid.html', 1500);
+      } catch (err) {
+        messageEl.textContent = err.message.includes('Failed to fetch')
+          ? "Can't connect to server—check network/CORS."
+          : err.message;
+      }
+    }
+  </script>
+</body>
+</html>
