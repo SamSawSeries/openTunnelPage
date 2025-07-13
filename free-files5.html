@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Free Tunnel Config Files</title>
     <style>
+    .file-name{
+        padding-right: 60px;
+    }
         body {
             font-family: 'Arial', sans-serif;
-            margin: 20px;
-            margin-left: 8px;
-            margin-right: 8px;
+            margin: 0px;
+            margin-left: 0px;
+            margin-right: 0px;
             background-color: #f4f4f4;
             text-align: center;#42445A
         }
@@ -71,6 +74,7 @@
             overflow: hidden;
         }
         .file-name {
+            margin-right: 1px;
             font-weight: bold;
             white-space: nowrap;
             overflow: hidden;
@@ -97,12 +101,131 @@
         .download-icon:hover {
             color: #0056b3;
         }
+
+
+
+
+        /* First Navbar: Hamburger + Brand + Dropdown */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #333;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      position: relative;
+    }
+    .navbar .brand {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+    .navbar .hamburger {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      width: 24px;
+      height: 18px;
+      justify-content: space-between;
+    }
+    .navbar .hamburger span {
+      display: block;
+      height: 3px;
+      background-color: #fff;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    .navbar .menu {
+      display: none;
+      flex-direction: column;
+      background-color: #333;
+      position: absolute;
+      top: 56px;
+      right: 1rem;
+      width: 200px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .navbar .menu a {
+      color: #fff;
+      padding: 0.75rem 1rem;
+      text-decoration: none;
+      border-bottom: 1px solid #444;
+    }
+    .navbar .menu a:last-child { border-bottom: none; }
+    .navbar .menu a:hover { background-color: #444; }
+    .navbar.active .menu { display: flex; }
+    @media(min-width: 768px) {
+      .navbar .hamburger { display: none; }
+      .navbar .menu {
+        display: flex !important;
+        position: static;
+        flex-direction: row;
+        background: transparent;
+        width: auto;
+      }
+      .navbar .menu a { border: none; padding: 0 1rem; }
+    }
+
+
+        /* Third Navbar: Colored Buttons */
+    .navbar2 {
+      display: flex;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      background-color: #fff;
+      padding: 0.5rem 0;
+      gap: 1rem;
+    }
+    .navbar2 .btn {
+      flex: 0 0 auto;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-red { background-color: #e74c3c; }
+    .btn-green { background-color: #27ae60; }
+    .btn-blue { background-color: #2980b9; }
+    .btn-orange { background-color: #e67e22; }
+
+
+        /* Footer */
+    .footer { background-color: #333; color: #fff; text-align: center; padding: 1rem; font-size: 0.9rem; }
     </style>
 </head>
 <body>
+    <!-- First Navbar -->
+<header class="navbar">
+    <div class="brand">OpenTunnelFiles.store</div>
+    <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <nav class="menu" id="menu">
+        <a href="index.html">Home</a>
+        
+        <a href="paid-files.html">Paid Files</a>
+        <a href="#">File Creator</a>
+        <a href="#">Buy Config Files</a>
+        <a href="#">Updates</a>
+    </nav>
+</header>
+
+<!-- Third Navbar: Colored Buttons -->
+<nav style="background-color: black;" class="navbar2">
+  
+  <button class="btn btn-green" onclick="window.open('paid-files.html')">Paid Files</button>
+  <button class="btn btn-blue">File Creator</button>
+  <button class="btn btn-orange">Buy Config Files</button>
+</nav>
+
 
     <div class="container">
-        <h2>Today’s Free Tunnel Configs</h2>
+        <h2>OpenTunnel Free Configs Files</h2>
         <p id="message"></p>
         <h3>Available Files</h3>
         <div class="file-list" id="fileList"></div>
@@ -129,18 +252,21 @@
                 }
 
                 files.forEach(f => {
-                    let card = document.createElement('div');
-                    card.className = 'file-card';
-                    card.innerHTML = `
-                        <img src="IMG_20250312_211118.jpg" alt="file icon" class="file-icon">
-                        <div class="file-info">
-                            <div class="file-name">${f.file_key}</div>
-                            <div class="file-details">${new Date(f.created_at).toLocaleString()}</div>
-                        </div>
-                        <a href="${f.file_url}" download class="download-icon">⬇️</a>
-                    `;
-                    fileList.appendChild(card);
-                });
+    // remove the leading “1234567890-” timestamp prefix
+    const displayName = f.file_key.replace(/^[0-9]+-/, '');
+    
+    const card = document.createElement('div');
+    card.className = 'file-card';
+    card.innerHTML = `
+    <img src="IMG_20250713_035035.jpg" alt="file icon" class="file-icon">
+    <div class="file-info">
+      <div class="file-name">${displayName}</div>
+      <div class="file-details">${new Date(f.created_at).toLocaleString()}</div>
+    </div>
+    <a href="${f.file_url}" download="${displayName}" class="download-icon">⬇️</a>
+  `;
+    fileList.appendChild(card);
+});
             } catch (err) {
                 message.innerText = 'Error fetching files.';
                 console.error(err);
@@ -148,7 +274,35 @@
         }
 
         window.onload = displayFiles;
+
+
+
+        const hamburger = document.getElementById('hamburger');
+const navbar = document.querySelector('.navbar');
+const menu = document.getElementById('menu');
+
+hamburger.addEventListener('click', (e) => {
+  e.stopPropagation();
+  navbar.classList.toggle('active');
+});
+
+// Close menu when clicking outside
+document.addEventListener('click', (e) => {
+  if (navbar.classList.contains('active') && !navbar.contains(e.target)) {
+    navbar.classList.remove('active');
+  }
+});
+
+// Prevent clicks inside menu from closing
+menu.addEventListener('click', (e) => {
+  e.stopPropagation();
+});
     </script>
 
+
+    <!-- Footer -->
+<footer style="margin-top: 30px;" class="footer">
+  &copy; 2025 OpenTunnelFiles.store. All rights reserved.
+</footer>
 </body>
 </html>
