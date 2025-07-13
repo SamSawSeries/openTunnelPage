@@ -5,32 +5,103 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Paid Files – TunnelShare</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px 8px; background: #f4f4f4; text-align: center; }
-    .container {
-      max-width: 500px; margin: auto; background: #fff; padding: 20px;
-      border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    .file-name{
+        padding-right: 60px;
     }
-    h2, h3 { color: #333; }
-    .file-list { margin-top: 15px; }
-    .file-card {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px; margin: 10px 0; background: white; border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .download-icon {
-      font-size: 1.2em; color: #007bff; text-decoration: none;
-    }
-    .download-icon:hover { color: #0056b3; }
-    .msg { color: #d9534f; min-height: 1.2em; margin: 10px 0; }
-    button { 
-      margin-top: 10px; padding: 10px 20px; border: none; 
-      background: #007bff; color: white; border-radius: 5px; cursor: pointer; 
-      transition: background 0.3s;
-    }
-    button:hover { background: #0056b3; }
-    a.back { display: inline-block; margin-top: 12px; color: #007bff; text-decoration: none; }
-    a.back:hover { color: #0056b3; }
-  </style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            margin-left: 8px;
+            margin-right: 8px;
+            background-color: #f4f4f4;
+            text-align: center;#42445A
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+        }
+        h2, h3 {
+            color: #333;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .file-list {
+    margin-top: 15px;
+}
+        .file-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 8px;
+    padding: 12px;
+    margin: 10px 0;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+        .file-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+        .file-icon {
+            width: 35px;
+            height: 35px;
+            margin-right: 5px;
+            flex-shrink: 0;
+        }
+        .file-info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .file-name {
+            margin-right: 1px;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            margin-bottom: 3px;
+            text-overflow: ellipsis;
+            max-width: 200px; /* Prevents spanning down */
+        }
+        .file-details {
+            font-size: 13px;
+            color: #555;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .download-icon {
+            font-size: 20px;
+            text-decoration: none;
+            color: #007bff;
+            margin-left: 0px;
+            transition: color 0.3s;
+            flex-shrink: 0;
+        }
+        .download-icon:hover {
+            color: #0056b3;
+        }
+    </style>
 </head>
 <body>
   <script>
@@ -44,19 +115,18 @@
   </script>
 
   <div class="container">
-    <h2>Available Paid Tunnel Configs</h2>
-    <div id="msg" class="msg"></div>
-    <h3>Files</h3>
-    <div id="fileList" class="file-list"></div>
-    <button onclick="loadPaidFiles()">Refresh List</button>
-    <p><a href="index.html" class="back">← Back to Homepage</a></p>
-  </div>
+    <h2>Today’s Free Tunnel Configs</h2>
+    <p id="message"></p>
+    <h3>Available Files</h3>
+    <div class="file-list" id="fileList"></div>
+    <button onclick="displayFiles()">Refresh List</button>
+</div>
 
   <script>
     const API_BASE = 'https://opentunnelfiles99.onrender.com';
 
     async function loadPaidFiles() {
-      const msgEl = document.getElementById('msg');
+      const msgEl = document.getElementById('message');
       const listEl = document.getElementById('fileList');
       msgEl.textContent = '';
       listEl.innerHTML = '<p>Loading…</p>';
@@ -87,13 +157,22 @@
 
         // Render list
         listEl.innerHTML = '';
+        
         files.forEach(f => {
+            // remove the leading “1234567890-” timestamp prefix
+const displayName = f.file_key.replace(/^[0-9]+-/, '');
           const card = document.createElement('div');
           card.className = 'file-card';
           card.innerHTML = `
-            <span>${f.file_key}</span>
-            <a href="${f.file_url}" download class="download-icon">⬇️</a>
-          `;
+    <img src="IMG_20250312_211118.jpg" alt="file icon" class="file-icon">
+    <div class="file-info">
+      <div class="file-name">${displayName}</div>
+      <div class="file-details">${new Date(f.created_at).toLocaleString()}</div>
+    </div>
+    <a href="${f.file_url}" download="${displayName}" class="download-icon">⬇️</a>
+  `;
+  
+  
           listEl.appendChild(card);
         });
 
