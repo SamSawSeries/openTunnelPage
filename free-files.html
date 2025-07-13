@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Free Tunnel Config Files</title>
     <style>
+    .file-name{
+        padding-right: 60px;
+    }
         body {
             font-family: 'Arial', sans-serif;
             margin: 20px;
@@ -71,6 +74,7 @@
             overflow: hidden;
         }
         .file-name {
+            margin-right: 1px;
             font-weight: bold;
             white-space: nowrap;
             overflow: hidden;
@@ -129,18 +133,21 @@
                 }
 
                 files.forEach(f => {
-                    let card = document.createElement('div');
-                    card.className = 'file-card';
-                    card.innerHTML = `
-                        <img src="IMG_20250312_211118.jpg" alt="file icon" class="file-icon">
-                        <div class="file-info">
-                            <div class="file-name">${f.file_key}</div>
-                            <div class="file-details">${new Date(f.created_at).toLocaleString()}</div>
-                        </div>
-                        <a href="${f.file_url}" download class="download-icon">⬇️</a>
-                    `;
-                    fileList.appendChild(card);
-                });
+    // remove the leading “1234567890-” timestamp prefix
+    const displayName = f.file_key.replace(/^[0-9]+-/, '');
+    
+    const card = document.createElement('div');
+    card.className = 'file-card';
+    card.innerHTML = `
+    <img src="IMG_20250312_211118.jpg" alt="file icon" class="file-icon">
+    <div class="file-info">
+      <div class="file-name">${displayName}</div>
+      <div class="file-details">${new Date(f.created_at).toLocaleString()}</div>
+    </div>
+    <a href="${f.file_url}" download="${displayName}" class="download-icon">⬇️</a>
+  `;
+    fileList.appendChild(card);
+});
             } catch (err) {
                 message.innerText = 'Error fetching files.';
                 console.error(err);
