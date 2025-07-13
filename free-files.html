@@ -101,9 +101,128 @@
         .download-icon:hover {
             color: #0056b3;
         }
+
+
+
+
+        /* First Navbar: Hamburger + Brand + Dropdown */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #333;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      position: relative;
+    }
+    .navbar .brand {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+    .navbar .hamburger {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      width: 24px;
+      height: 18px;
+      justify-content: space-between;
+    }
+    .navbar .hamburger span {
+      display: block;
+      height: 3px;
+      background-color: #fff;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    .navbar .menu {
+      display: none;
+      flex-direction: column;
+      background-color: #333;
+      position: absolute;
+      top: 56px;
+      right: 1rem;
+      width: 200px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .navbar .menu a {
+      color: #fff;
+      padding: 0.75rem 1rem;
+      text-decoration: none;
+      border-bottom: 1px solid #444;
+    }
+    .navbar .menu a:last-child { border-bottom: none; }
+    .navbar .menu a:hover { background-color: #444; }
+    .navbar.active .menu { display: flex; }
+    @media(min-width: 768px) {
+      .navbar .hamburger { display: none; }
+      .navbar .menu {
+        display: flex !important;
+        position: static;
+        flex-direction: row;
+        background: transparent;
+        width: auto;
+      }
+      .navbar .menu a { border: none; padding: 0 1rem; }
+    }
+
+
+        /* Third Navbar: Colored Buttons */
+    .navbar2 {
+      display: flex;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      background-color: #fff;
+      padding: 0.5rem 0;
+      gap: 1rem;
+    }
+    .navbar2 .btn {
+      flex: 0 0 auto;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-red { background-color: #e74c3c; }
+    .btn-green { background-color: #27ae60; }
+    .btn-blue { background-color: #2980b9; }
+    .btn-orange { background-color: #e67e22; }
+
+
+        /* Footer */
+    .footer { background-color: #333; color: #fff; text-align: center; padding: 1rem; font-size: 0.9rem; }
     </style>
 </head>
 <body>
+    <!-- First Navbar -->
+<header class="navbar">
+    <div class="brand">OpenTunnelFiles.store</div>
+    <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <nav class="menu" id="menu">
+        <a href="#">Home</a>
+        <a href="#">Free Files</a>
+        <a href="#">Paid Files</a>
+        <a href="#">File Creator</a>
+        <a href="#">Buy Config Files</a>
+        <a href="#">Updates</a>
+    </nav>
+</header>
+
+<!-- Third Navbar: Colored Buttons -->
+<nav style="background-color: black;" class="navbar2">
+  <button class="btn btn-red">Free Files</button>
+  <button class="btn btn-green">Paid Files</button>
+  <button class="btn btn-blue">File Creator</button>
+  <button class="btn btn-orange">Buy Config Files</button>
+</nav>
+
 
     <div class="container">
         <h2>OpenTunnel Free Configs Files</h2>
@@ -155,7 +274,35 @@
         }
 
         window.onload = displayFiles;
+
+
+
+        const hamburger = document.getElementById('hamburger');
+const navbar = document.querySelector('.navbar');
+const menu = document.getElementById('menu');
+
+hamburger.addEventListener('click', (e) => {
+  e.stopPropagation();
+  navbar.classList.toggle('active');
+});
+
+// Close menu when clicking outside
+document.addEventListener('click', (e) => {
+  if (navbar.classList.contains('active') && !navbar.contains(e.target)) {
+    navbar.classList.remove('active');
+  }
+});
+
+// Prevent clicks inside menu from closing
+menu.addEventListener('click', (e) => {
+  e.stopPropagation();
+});
     </script>
 
+
+    <!-- Footer -->
+<footer style="margin-top: 30px;" class="footer">
+  &copy; 2025 OpenTunnelFiles.store. All rights reserved.
+</footer>
 </body>
 </html>
