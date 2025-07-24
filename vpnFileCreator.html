@@ -1,26 +1,27 @@
 <!-- submit.html: Form to add SSH details -->
+<!-- submit.html: Form to add SSH details (requires JWT from your existing login) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Submit SSH Details</title>
 </head>
 <body>
   <h1>Submit SSH Details</h1>
   <form id="ssh-form">
     <label>
-      Hostname:<br>
-      <input type="text" name="hostname" required>
-    </label><br><br>
+      Hostname:<br />
+      <input type="text" name="hostname" required />
+    </label><br /><br />
     <label>
-      Username:<br>
-      <input type="text" name="username" required>
-    </label><br><br>
+      Username:<br />
+      <input type="text" name="username" required />
+    </label><br /><br />
     <label>
-      Password:<br>
-      <input type="password" name="password" required>
-    </label><br><br>
+      Password:<br />
+      <input type="password" name="password" required />
+    </label><br /><br />
     <button type="submit">Submit</button>
   </form>
   <p id="status"></p>
@@ -28,31 +29,45 @@
   <script>
     const form = document.getElementById('ssh-form');
     const status = document.getElementById('status');
+
     form.addEventListener('submit', async e => {
       e.preventDefault();
-      const data = {
+
+      // Retrieve the JWT from localStorage (set by your existing login.html)
+      const token = localStorage.getItem('token');
+      if (!token) {
+        status.textContent = 'Error: You must be logged in first.';
+        return;
+      }
+
+      const payload = {
         hostname: form.hostname.value,
         username: form.username.value,
         password: form.password.value
       };
+
       try {
-        const res = await fetch('https://opentunnelfiles99.onrender.com/ssh', {
+        const response = await fetch('https://opentunnelfiles99.onrender.com/ssh', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify(payload)
         });
-        const json = await res.json();
-        if (res.ok) {
-          status.textContent = 'Saved! ID: ' + json.ssh.id;
+        const result = await response.json();
+
+        if (response.ok) {
+          status.textContent = `Saved! ID: ${result.ssh.id}`;
           form.reset();
         } else {
-          status.textContent = 'Error: ' + json.error;
+          status.textContent = 'Error: ' + result.error;
         }
-      } catch (err) {
-        status.textContent = 'Network error';
+      } catch (error) {
+        console.error(error);
+        status.textContent = 'Network error. Please try again.';
       }
     });
   </script>
-
 </body>
 </html>
