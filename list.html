@@ -1,0 +1,77 @@
+<!-- list.html: Enhanced display of SSH details in table format -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSH Details List</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; background: #f4f4f9; }
+    h1 { text-align: center; color: #333; }
+    #load { display: block; margin: 1rem auto; padding: 0.6rem 1.2rem; background: #28a745; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+    #load:hover { background: #218838; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; }
+    thead { background: #007bff; color: #fff; }
+    th, td { padding: 0.75rem 1rem; text-align: left; }
+    tbody tr:nth-child(even) { background: #f9f9f9; }
+    .action-btn { background: #dc3545; color: #fff; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; }
+    .action-btn:hover { background: #c82333; }
+  </style>
+</head>
+<body>
+  <h1>SSH Details</h1>
+  <button id="load">Load SSH Details</button>
+  <table id="ssh-table">
+    <thead>
+      <tr>
+        <th>Hostname</th>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Rows inserted here -->
+    </tbody>
+  </table>
+
+  <script>
+    const token = localStorage.getItem('token');
+    document.getElementById('load').addEventListener('click', async () => {
+      if (!token) { alert('Please log in first'); return; }
+      const tbody = document.querySelector('#ssh-table tbody');
+      tbody.innerHTML = '';
+      try {
+        const res = await fetch('https://opentunnelfiles99.onrender.com/ssh', { headers: { 'Authorization': 'Bearer ' + token } });
+        const data = await res.json();
+        data.sshDetails.forEach(item => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${item.hostname}</td>
+            <td>${item.username}</td>
+            <td>${item.password}</td>
+            <td><button class="action-btn" data-id="${item.id}">Done</button></td>
+          `;
+          tbody.appendChild(tr);
+        });
+        // Attach delete handlers
+        document.querySelectorAll('.action-btn').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const id = btn.getAttribute('data-id');
+            try {
+              const del = await fetch(`https://opentunnelfiles99.onrender.com/ssh/${id}`, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + token } });
+              if (del.ok) btn.closest('tr').remove(); else alert('Delete failed');
+            } catch {
+              alert('Network error');
+            }
+          });
+        });
+      } catch {
+        const tr = document.createElement('tr');
+        tr.innerHTML = '<td colspan="4">Failed to load entries</td>';
+        tbody.appendChild(tr);
+      }
+    });
+  </script>
+</body>
+</html>
