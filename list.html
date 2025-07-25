@@ -50,7 +50,10 @@
             <td>${item.hostname}</td>
             <td>${item.username}</td>
             <td>${item.password}</td>
-            <td><button class="action-btn" data-id="${item.id}">Done</button></td>
+            <td><button class="action-btn done-btn" data-id="${item.id}">Done</button>
+    <button class="action-btn upload-btn" data-id="${item.id}" data-email="${item.email}">Upload</button>
+</td>
+
           `;
           tbody.appendChild(tr);
         });
@@ -72,6 +75,40 @@
         tbody.appendChild(tr);
       }
     });
+
+    // Attach upload handlers
+document.querySelectorAll('.upload-btn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const id = btn.getAttribute('data-id');
+    const email = btn.getAttribute('data-email');
+
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.onchange = async () => {
+      const file = input.files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('email', email);
+
+      try {
+        const res = await fetch(`https://opentunnelfiles99.onrender.com/uploadfile/${id}`, {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + token },
+          body: formData
+        });
+        if (res.ok) {
+          alert('File uploaded successfully');
+        } else {
+          alert('Upload failed');
+        }
+      } catch {
+        alert('Network error');
+      }
+    };
+    input.click();
+  });
+});
+
   </script>
 </body>
 </html>
