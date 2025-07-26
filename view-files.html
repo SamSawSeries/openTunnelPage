@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+  <h1>My Sent Files</h1>
+<ul id="file-list"></ul>
+
+<script>
+const token = localStorage.getItem('token');
+async function loadFiles() {
+  const res = await fetch('https://opentunnelfiles99.onrender.com/my-files', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  });
+  const files = await res.json();
+  const list = document.getElementById('file-list');
+  files.forEach(f => {
+    const li = document.createElement('li');
+    const link = document.createElement('a');
+    link.href = `https://opentunnelfiles99.onrender.com/download/${f.id}`;
+    link.textContent = f.filename;
+    link.download = f.filename;
+    li.appendChild(link);
+    list.appendChild(li);
+  });
+}
+loadFiles();
+</script>
+
+</body>
+
+</html>
