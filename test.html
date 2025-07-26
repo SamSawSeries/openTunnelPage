@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Sent Files</title>
+</head>
+<body>
+  <h1>My Sent Files</h1>
+  <ul id="file-list"></ul>
+
+  <script>
+    const token = localStorage.getItem('token');
+
+    async function loadFiles() {
+      const res = await fetch('https://opentunnelfiles99.onrender.com/my-files', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const files = await res.json();
+      const list = document.getElementById('file-list');
+
+      files.forEach(f => {
+        const li = document.createElement('li');
+        li.textContent = f.filename + ' ';
+
+        const btn = document.createElement('button');
+        btn.textContent = 'Download';
+        btn.onclick = async () => {
+          try {
+            const fileRes = await fetch(`https://opentunnelfiles99.onrender.com/download/${f.id}`, {
+              headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (!fileRes.ok) throw new Error('Download failed');
+            const blob = await fileRes.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = f.filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+          } catch (err) {
+            alert(err.message);
+          }
+        };
+
+        li.appendChild(btn);
+        list.appendChild(li);
+      });
+    }
+
+    loadFiles();
+  </script>
+</body>
+</html>
