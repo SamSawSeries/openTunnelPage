@@ -1,56 +1,113 @@
+<!-- list.html: Display all SSH details with Done and Upload buttons -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Sent Files</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSH Details List</title>
+  <style>
+    /* ... styles ... */
+  </style>
+</head>
+<body>
+  <h1>SSH Details</h1>
+  <button id="load">Load SSH Details</button>
+  <table id="ssh-table">
+    <thead>
+      <tr><th>Hostname</th><th>Username</th><th>Password</th><th>Email</th><th>Actions</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    (function() {
+      const listToken = localStorage.getItem('token');
+      const loadBtn = document.getElementById('load');
+      loadBtn.addEventListener('click', async () => {
+        if (!listToken) { alert('Please log in first'); return; }
+        const tbody = document.querySelector('#ssh-table tbody'); tbody.innerHTML = '';
+        try {
+          const res = await fetch('https://opentunnelfiles99.onrender.com/ssh', {
+            headers: { 'Authorization': 'Bearer ' + listToken }
+          });
+          const data = await res.json();
+          data.sshDetails.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${item.hostname}</td><td>${item.username}</td><td>${item.password}</td><td>${item.email}</td><td>
+              <button class="action-btn done-btn" data-id="${item.id}">Done</button>
+              <button class="action-btn upload upload-btn" data-id="${item.id}" data-email="${item.email}">Upload</button>
+            </td>`;
+            tbody.appendChild(tr);
+          });
+          // Done handlers
+          document.querySelectorAll('.done-btn').forEach(btn => {
+            btn.onclick = async () => {
+              const id = btn.dataset.id;
+              const del = await fetch(`https://opentunnelfiles99.onrender.com/ssh/${id}`, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + listToken } });
+              if (del.ok) btn.closest('tr').remove(); else alert('Delete failed');
+            };
+          });
+          // Upload handlers
+          document.querySelectorAll('.upload-btn').forEach(btn => {
+            btn.onclick = () => {
+              const id = btn.dataset.id;
+              const email = btn.dataset.email;
+              const input = document.createElement('input'); input.type = 'file';
+              input.onchange = async () => {
+                const file = input.files[0];
+                const formData = new FormData(); formData.append('file', file); formData.append('email', email);
+                const uploadRes = await fetch(`https://opentunnelfiles99.onrender.com/uploadfile/${id}`, { method: 'POST', headers: { 'Authorization': 'Bearer ' + listToken }, body: formData });
+                alert(uploadRes.ok ? 'File uploaded successfully' : 'Upload failed');
+              };
+              input.click();
+            };
+          });
+        } catch {
+          const tr = document.createElement('tr'); tr.innerHTML = '<td colspan="5">Failed to load entries</td>'; tbody.appendChild(tr);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
+
+<!-- view-files.html: Paid user sees their uploaded files -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Files</title>
+  <style>
+    /* ... styles ... */
+  </style>
 </head>
 <body>
   <h1>My Sent Files</h1>
   <ul id="file-list"></ul>
-
   <script>
-    const token = localStorage.getItem('token');
-
-    async function loadFiles() {
-      const res = await fetch('https://opentunnelfiles99.onrender.com/my-files', {
-        headers: { 'Authorization': 'Bearer ' + token }
-      });
-      const files = await res.json();
-      const list = document.getElementById('file-list');
-
-      files.forEach(f => {
-        const li = document.createElement('li');
-        li.textContent = f.filename + ' ';
-
-        const btn = document.createElement('button');
-        btn.textContent = 'Download';
-        btn.onclick = async () => {
-          try {
-            const fileRes = await fetch(`https://opentunnelfiles99.onrender.com/download/${f.id}`, {
-              headers: { 'Authorization': 'Bearer ' + token }
-            });
-            if (!fileRes.ok) throw new Error('Download failed');
-            const blob = await fileRes.blob();
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = f.filename;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            URL.revokeObjectURL(url);
-          } catch (err) {
-            alert(err.message);
-          }
-        };
-
-        li.appendChild(btn);
-        list.appendChild(li);
-      });
-    }
-
-    loadFiles();
+    (function() {
+      const viewToken = localStorage.getItem('token');
+      async function loadFiles() {
+        if (!viewToken) { document.getElementById('file-list').textContent = 'Please log in first'; return; }
+        try {
+          const res = await fetch('https://opentunnelfiles99.onrender.com/my-files', { headers: { 'Authorization': 'Bearer ' + viewToken } });
+          const files = await res.json();
+          const list = document.getElementById('file-list');
+          files.forEach(f => {
+            const li = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = `${f.path}`;
+            link.textContent = `${f.filename} (Uploaded: ${new Date(f.created_at).toLocaleString()})`;
+            li.appendChild(link);
+            list.appendChild(li);
+          });
+        } catch {
+          document.getElementById('file-list').textContent = 'Failed to load files';
+        }
+      }
+      loadFiles();
+    })();
   </script>
 </body>
 </html>
