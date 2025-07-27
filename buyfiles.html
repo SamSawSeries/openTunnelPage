@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTNUP2U.STORE</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 300px;
+            border-radius: 8px;
+        }
+        .container h2 {
+            color: #333;
+        }
+        .input-field {
+            margin: 10px 0;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .dropdown {
+            margin: 10px 0;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .pay-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+   
+</head>
+<body>
+
+<div class="container">
+    <h2>WELCOME TO OpenTunnel Files</h2>
+    <p style="color: red;
+font-size: 12px;
+margin-bottom: 20px;">Your file will be sent via WhatsApp</p>
+    <h3>Customer Details</h3>
+    <p style="color: red;
+    font-size: 12px;
+    margin-bottom: 20px;">There is no correction nor refund after submitting order</p>
+    
+    <input 
+        type="text" 
+        id="phoneNumber" 
+        class="input-field" 
+        placeholder="Enter your phone number" 
+        required>
+    
+    <input 
+        type="text" 
+        id="agentWhatsApp" 
+        class="input-field" 
+        placeholder="Enter your WhatsApp number" 
+        required>
+    
+    <input 
+        type="email" 
+        id="agentEmail" 
+        class="input-field" 
+        placeholder="Enter your email address" 
+        required>
+
+    <select class="dropdown" id="dataPlan">
+        
+        <option value="130" data-plan="2GB - GHC 1.30">1.5GB - GHC 1.30 (1day)</option>
+        
+        <option value="210" data-plan="3GB - GHC 2.10">3GB - GHC 2.10 (2days)</option>
+        
+        <option value="510" data-plan="5GB - GHC 5.10">5GB - GHC 5.10 (3days)</option>
+        
+        <option value="820" data-plan="10GB - GHC 8.20">10GB - GHC 8.20 (7days)</option>
+        
+        
+    </select>
+    
+    <select class="dropdown" id="vpnApp">
+    <option value="opentunnel">OpenTunnel</option>
+    <option value="httpinjector">HTTP Injector</option>
+    <option value="httpcustom">HTTP Custom</option>
+    <option value="zivpn">Zivpn</option>
+    <option value="npvtunnel">NPV Tunnel</option>
+    <option value="sockshttp">SocksHttp</option>
+</select>
+
+    
+    <button class="pay-button" onclick="payWithPaystack()">Pay Now</button>
+</div>
+
+<script>
+function payWithPaystack() {
+    const phoneNumber = document.getElementById('phoneNumber').value.trim();
+    const agentWhatsApp = document.getElementById('agentWhatsApp').value.trim();
+    const agentEmail = document.getElementById('agentEmail').value.trim();
+    const dataPlanSelect = document.getElementById('dataPlan');
+    const amount = dataPlanSelect.value;
+    const selectedPlan = dataPlanSelect.options[dataPlanSelect.selectedIndex].getAttribute('data-plan');
+
+    const vpnAppSelect = document.getElementById('vpnApp');
+    const vpnApp = vpnAppSelect.value;
+
+    if (!phoneNumber || !agentWhatsApp || !agentEmail) {
+        alert("All fields are required!");
+        return;
+    }
+
+    if (!validateEmail(agentEmail)) {
+        alert("Please enter a valid email address!");
+        return;
+    }
+
+    const handler = PaystackPop.setup({
+        key: 'pk_test_de9e67daa67fd9f3ca2e513e063c926444c04dab',
+        email: agentEmail,
+        amount: amount,
+        currency: 'GHS',
+        metadata: {
+            custom_fields: [
+                {
+                    display_name: "Phone Number",
+                    variable_name: "phone_number",
+                    value: phoneNumber
+                },
+                {
+                    display_name: "Agent WhatsApp",
+                    variable_name: "agent_whatsapp",
+                    value: agentWhatsApp
+                },
+                {
+                    display_name: "Selected Plan",
+                    variable_name: "data_plan",
+                    value: selectedPlan
+                },
+                {
+                    display_name: "VPN App",
+                    variable_name: "vpn_app",
+                    value: vpnApp
+                }
+            ]
+        },
+        callback: function(response) {
+            const message = `
+✅ Payment Successful!\n
+📱 Phone: ${phoneNumber}
+📦 Plan: ${selectedPlan}
+🛠 VPN App: ${vpnApp.toUpperCase()}
+🧾 Transaction Ref: ${response.reference}
+\nYour file will be sent via WhatsApp shortly.`;
+
+            alert(message);
+        },
+        onClose: function() {
+            alert('Payment process was canceled.');
+        }
+    });
+
+    handler.openIframe();
+}
+
+function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+</script>
+
+<script src="https://js.paystack.co/v1/inline.js"></script>
+
+
+</body>
+</html>
