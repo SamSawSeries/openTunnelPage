@@ -1,0 +1,10 @@
+# Ezoic Ads.txt File
+
+google.com, pub-3298589514944013, DIRECT, f08c47fec0942fa0
+ezoic.com, 1000000, RESELLER, a9d9d27d2ccc76cf
+
+# Additional recommended entries
+appnexus.com, 1000000, RESELLER, f5ab79cb980f11d1
+openx.com, 1000000, RESELLER, 6a698e2ec38604c6
+rubiconproject.com, 1000000, RESELLER, 0bfd66d529a55807
+indexexchange.com, 1000000, RESELLER, 50b1c356f2c5c8fc
