@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VPN Servers</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .server-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .flag {
+      font-size: 30px;
+    }
+
+    .server-name {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .details {
+      font-size: 14px;
+      margin: 5px 0;
+      color: #555;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 10px;
+      background: #4f46e5;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background: #3730a3;
+    }
+
+    .loader {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .download-btn {
+      margin-top: 10px;
+      padding: 10px 15px;
+      background: #059669;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      display: none;
+    }
+
+    .download-btn:hover {
+      background: #047857;
+    }
+    
+    @media (min-width: 767px) {
+      #card11{
+        
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🌍 Available VPN Servers</h2>
+
+  <div class="server-list">
+
+    <!-- Server 1 -->
+    <div id="card11"  class="card">
+      <div class="flag">🇺🇸</div>
+      <div class="server-name">USA File</div>
+      <div style="color: green; font-size: large; font-weight: bold;" class="details">Ping: <span class="ping">Loading...</span> ms</div>
+      <div style="font-size: 18px;color: royalblue;" class="details">File type: OpenTunnel</div>
+      <button class="btn" onclick="generateFile(this, 'usa.tnl')">Generate File</button>
+      <div class="loader"></div>
+      <a class="download-btn" download href="">⬇ Download Config</a>
+      
+      <hr />
+      <hr />
+      <hr />
+      
+      <script async="async" data-cfasync="false" src="//pl24529402.profitableratecpm.com/f40b6fa25d1fefa848e6fb99f86f5206/invoke.js"></script>
+<div id="container-f40b6fa25d1fefa848e6fb99f86f5206"></div>
+    </div>
+
+    <!-- Server 2 -->
+    <div class="card" style="font-size: large;">
+      <h3>OpenTunnel File Tutorial Guide</h3>
+      <hr />
+      <strong>Step 1</strong>
+      <p>
+      Generate the file.
+      <br /> <br />
+      <img width="100%" src="/IMG_20250824_223215.jpg" alt="">
+      After it has finished generating the file.. <br />Now Download and import the file to opentunnel app..
+      <img width="100%" src="/IMG_20250824_223818.jpg" alt=""></p>
+      
+      <strong>Step 2</strong>
+      <p>
+        Enter the saved username and password in the opentunnel app.. <br /><br />
+        <img width="100%" src="/IMG_20250824_222458.jpg" alt=""><br /><br />
+        Then click the start button to start the ssh authentication <br /><br />
+        <img width="100%" src="/IMG_20250824_232021.jpg" alt="">
+      </p>
+    </div>
+
+    
+  </div>
+
+  <script>
+    // Fake Ping Generator
+    function updatePings() {
+      document.querySelectorAll('.ping').forEach(el => {
+        el.textContent = Math.floor(Math.random() * 100) + 50; // between 50ms - 150ms
+      });
+    }
+    setInterval(updatePings, 2000);
+    updatePings();
+
+    // File Generate + Download
+    function generateFile(btn, filename) {
+      let loader = btn.nextElementSibling;
+      let downloadBtn = loader.nextElementSibling;
+
+      btn.style.display = "none";
+      loader.textContent = "Generating file... (5s)";
+      let counter = 5;
+
+      let interval = setInterval(() => {
+        counter--;
+        loader.textContent = `Generating file... (${counter}s)`;
+        if (counter === 0) {
+          clearInterval(interval);
+          loader.textContent = "✅ File ready!";
+          downloadBtn.style.display = "inline-block";
+          downloadBtn.href = filename; // file in same dir
+        }
+      }, 1000);
+    }
+  </script>
+
+</body>
+</html>
