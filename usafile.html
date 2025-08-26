@@ -53,48 +53,44 @@
       color: #555;
     }
 
-    .btn {
-      display: inline-block;
+    .btn, .download-btn, select {
       margin-top: 10px;
       padding: 10px 15px;
       border: none;
       border-radius: 10px;
-      background: #4f46e5;
-      color: white;
       font-size: 14px;
       cursor: pointer;
       transition: background 0.3s;
+    }
+
+    select {
+      background: #f9fafb;
+      border: 1px solid #ddd;
+    }
+
+    .btn {
+      background: #4f46e5;
+      color: white;
     }
 
     .btn:hover {
       background: #3730a3;
     }
 
-    .loader {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #333;
-    }
-
     .download-btn {
-      margin-top: 10px;
-      padding: 10px 15px;
       background: #059669;
       color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
       display: none;
     }
 
     .download-btn:hover {
       background: #047857;
     }
-    
-    @media (min-width: 767px) {
-      #card11{
-        
-      }
+
+    .loader {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #333;
     }
   </style>
 </head>
@@ -107,19 +103,34 @@
     <!-- Server 1 -->
     <div id="card11"  class="card">
       <div class="flag">🇺🇸</div>
-      <div class="server-name">USA File</div>
-      <div style="color: green; font-size: large; font-weight: bold;" class="details">Ping: <span class="ping">Loading...</span> ms</div>
-      <div style="font-size: 18px;color: royalblue;" class="details">File type: OpenTunnel</div>
-      <button class="btn" onclick="generateFile(this, 'usa.tnl')">Generate File</button>
+      <div class="server-name">USA Server</div>
+      <div style="color: green; font-size: large; font-weight: bold;" class="details">
+        Ping: <span class="ping">Loading...</span> ms
+      </div>
+
+      <!-- Dropdown for file type -->
+      <label for="fileType">Choose file type:</label>
+      <br />
+      <select class="fileType">
+        <option value="tnl">OpenTunnel (.tnl)</option>
+        <option value="ehi">HTTP Injector (.ehi)</option>
+        <option value="hc">HTTP Custom (.hc)</option>
+        <option value="npv">NPV Tunnel (.npv)</option>
+        <option value="zivpn">ZiVPN (.zivpn)</option>
+      </select>
+
+      <br />
+      <button class="btn" onclick="generateFile(this, 'F23')">Generate File</button>
       <div class="loader"></div>
       <a class="download-btn" download href="">⬇ Download Config</a>
-      
+
       <hr />
       <hr />
       <hr />
-      
+
+      <!-- Ad code -->
       <script async="async" data-cfasync="false" src="//pl24529402.profitableratecpm.com/f40b6fa25d1fefa848e6fb99f86f5206/invoke.js"></script>
-<div id="container-f40b6fa25d1fefa848e6fb99f86f5206"></div>
+      <div id="container-f40b6fa25d1fefa848e6fb99f86f5206"></div>
     </div>
 
     <!-- Server 2 -->
@@ -143,7 +154,6 @@
       </p>
     </div>
 
-    
   </div>
 
   <script>
@@ -157,9 +167,13 @@
     updatePings();
 
     // File Generate + Download
-    function generateFile(btn, filename) {
+    function generateFile(btn, baseName) {
       let loader = btn.nextElementSibling;
       let downloadBtn = loader.nextElementSibling;
+      let select = btn.previousElementSibling; // dropdown menu
+
+      let fileExt = select.value; // get extension from dropdown
+      let filename = baseName + "." + fileExt; // e.g. USA-server.tnl
 
       btn.style.display = "none";
       loader.textContent = "Generating file... (5s)";
@@ -172,7 +186,8 @@
           clearInterval(interval);
           loader.textContent = "✅ File ready!";
           downloadBtn.style.display = "inline-block";
-          downloadBtn.href = filename; // file in same dir
+          downloadBtn.href = filename; // file must exist in same dir
+          downloadBtn.setAttribute("download", filename);
         }
       }, 1000);
     }
