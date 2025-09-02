@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ping Test</title>
+  <style>
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f9fafb;
+      padding: 30px;
+      color: #111827;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .server-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 25px 20px;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      border: 1px solid #e5e7eb;
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    }
+
+    .flag {
+      font-size: 42px;
+      margin-bottom: 12px;
+    }
+
+    .server-name {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 8px 0;
+    }
+
+    .details {
+      font-size: 14px;
+      margin: 6px 0;
+      color: #6b7280;
+    }
+
+    /* Ping badge */
+    .ping-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      color: white;
+      min-width: 70px;
+      transition: background 0.3s ease;
+    }
+
+    /* Status dot */
+    .dot {
+      height: 8px;
+      width: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.4); opacity: 1; }
+    }
+
+    /* Buttons */
+    .btn {
+      margin-top: 18px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.3s;
+      width: 100%;
+    }
+
+    .btn:hover {
+      background: #1e40af;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+      transform: translateY(-2px);
+    }
+
+    header {
+      background: #2563eb;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .ping-box {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+
+    .ping-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .ping-value {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #2563eb;
+      margin-bottom: 15px;
+    }
+
+    .ping-status {
+      font-size: 1rem;
+      color: #666;
+    }
+
+    footer {
+      background: #1e293b;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      font-size: 0.9rem;
+      margin-top: auto; /* ensures it only shows after scrolling down */
+    }
+  </style>
+</head>
+<body>
+  <h2>🌍 Available VPN Servers</h2>
+
+<div class="server-list">
+  
+  <!-- Server 1 -->
+  <div class="card">
+    <div class="flag">🇺🇸</div>
+    <div class="server-name">USA Server</div>
+    <div class="details">
+      Ping:
+      <span class="ping-badge">
+        <span class="dot"></span>
+        <span class="ping">--</span> ms
+      </span>
+    </div>
+    <div class="details">Protocol: OpenTunnel</div>
+    <button class="btn" onclick="redirectTo('/usa_opentunnel_server.html')">Connect</button>
+  </div>
+  
+  <!-- Server 1 -->
+<div class="card">
+  <div class="flag">🇺🇸</div>
+  <div class="server-name">USA Server 2</div>
+  <div class="details">
+    Ping:
+    <span class="ping-badge">
+      <span class="dot"></span>
+      <span class="ping">--</span> ms
+    </span>
+  </div>
+  <div class="details">Protocol: OpenTunnel</div>
+  <button class="btn" onclick="redirectTo('usa_1_opentunnel_server.html')">Connect</button>
+</div>
+
+<!-- Server 1 -->
+<div class="card">
+  <div class="flag">🇨🇦</div>
+  <div class="server-name">CANADA Server</div>
+  <div class="details">
+    Ping:
+    <span class="ping-badge">
+      <span class="dot"></span>
+      <span class="ping">--</span> ms
+    </span>
+  </div>
+  <div class="details">Protocol: OpenTunnel</div>
+  <button class="btn" onclick="redirectTo('/canada_opentunnel_server.html')">Connect</button>
+</div>
+
+
+  
+  <!-- Server 2 -->
+  <div class="card">
+    <div class="flag">🇬🇧</div>
+    <div class="server-name">UK Server</div>
+    <div class="details">
+      Ping:
+      <span class="ping-badge">
+        <span class="dot"></span>
+        <span class="ping">--</span> ms
+      </span>
+    </div>
+    <div class="details">Protocol: OpenTunnel</div>
+    <button class="btn" onclick="redirectTo('/uk_opentunnel_server.html')">Connect</button>
+  </div>
+  
+  <!-- Server 2 -->
+<div class="card">
+  <div class="flag">🇬🇧</div>
+  <div class="server-name">UK Server 2</div>
+  <div class="details">
+    Ping:
+    <span class="ping-badge">
+      <span class="dot"></span>
+      <span class="ping">--</span> ms
+    </span>
+  </div>
+  <div class="details">Protocol: OpenTunnel</div>
+  <button class="btn" onclick="redirectTo('/uk_2_opentunnel_server.html')">Connect</button>
+</div>
+  
+  <!-- Server 3 -->
+  <div class="card">
+    <div class="flag">🇸🇬</div>
+    <div class="server-name">Singapore Server</div>
+    <div class="details">
+      Ping:
+      <span class="ping-badge">
+        <span class="dot"></span>
+        <span class="ping">--</span> ms
+      </span>
+    </div>
+    <div class="details">Protocol: OpenTunnel</div>
+    <button class="btn" onclick="redirectTo('/sg_opentunnel_server.html')">Connect</button>
+  </div>
+  
+  <!-- Server 2 -->
+<div class="card">
+  <div class="flag">🇫🇮</div>
+  <div class="server-name">Finland Server</div>
+  <div class="details">
+    Ping:
+    <span class="ping-badge">
+      <span class="dot"></span>
+      <span class="ping">--</span> ms
+    </span>
+  </div>
+  <div class="details">Protocol: OpenTunnel</div>
+  <button class="btn" onclick="redirectTo('/finland_opentunnel_server.html')">Connect</button>
+</div>
+
+<!-- Server 2 -->
+<div class="card">
+  <div class="flag">🇯🇵</div>
+  <div class="server-name">Japan Server</div>
+  <div class="details">
+    Ping:
+    <span class="ping-badge">
+      <span class="dot"></span>
+      <span class="ping">--</span> ms
+    </span>
+  </div>
+  <div class="details">Protocol: OpenTunnel</div>
+  <button class="btn" onclick="redirectTo('/japan_opentunnel_server.html')">Connect</button>
+</div>
+
+
+  
+</div>
+
+<script>
+  function updatePings() {
+    document.querySelectorAll('.ping').forEach(pingEl => {
+      let badge = pingEl.closest('.ping-badge');
+      let dot = badge.querySelector('.dot');
+      let ping = Math.floor(Math.random() * 150) + 30; // 30-180ms
+      pingEl.textContent = ping;
+      
+      if (ping < 80) {
+        badge.style.background = "#16a34a"; // green
+        dot.style.background = "#22c55e";
+      } else if (ping < 130) {
+        badge.style.background = "#ca8a04"; // yellow
+        dot.style.background = "#eab308";
+      } else {
+        badge.style.background = "#dc2626"; // red
+        dot.style.background = "#ef4444";
+      }
+    });
+  }
+  setInterval(updatePings, 2000);
+  updatePings();
+  
+  function redirectTo(url) {
+    window.location.href = url;
+  }
+</script>
+
+  <footer style="margin-top: 30px;">
+    © 2025 Ping Test App | Built with ❤️
+  </footer>
+</body>
+</html>
+
