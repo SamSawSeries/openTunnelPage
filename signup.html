@@ -39,7 +39,7 @@ async function register() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  const res = await fetch("https://YOUR_API_URL/signup_databundle", {
+  const res = await fetch("https://opentunnelfiles99.onrender.com/signup_databundle", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password })
