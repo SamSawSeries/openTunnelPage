@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+
+  <style>
+    body { font-family: Arial; background: #f0f0f0; padding: 40px; }
+    .container {
+      max-width: 400px; margin: auto; background: white; padding: 30px;
+      border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.15);
+    }
+    input {
+      width: 100%; padding: 12px; margin-bottom: 15px;
+      border: 1px solid #ccc; border-radius: 6px;
+    }
+    button {
+      width: 100%; padding: 12px; background: #28a745; color: white;
+      border: none; border-radius: 6px; cursor: pointer;
+      font-size: 16px;
+    }
+    a { text-decoration: none; color: #007bff; }
+  </style>
+
+</head>
+<body>
+
+<div class="container">
+  <h2>Login</h2>
+
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+
+  <button onclick="login()">Login</button>
+
+  <p>No account? <a href="signup.html">Register</a></p>
+</div>
+
+<script>
+async function login() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const res = await fetch("https://YOUR_API_URL/login_databundle", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
+
+  const data = await res.json();
+
+  if (res.ok) {
+    alert("Login successful!");
+    localStorage.setItem("token", data.token);
+    window.location.href = "dashboard.html";
+  } else {
+    alert(data.error);
+  }
+}
+</script>
+
+</body>
+</html>
