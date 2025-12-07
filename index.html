@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Bundle Agent Registration</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      text-align: center;
+      padding: 50px;
+    }
+    .box {
+      background: white;
+      padding: 40px;
+      width: 90%;
+      max-width: 450px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+    button {
+      background: #0a5dff;
+      color: white;
+      border: none;
+      padding: 15px 25px;
+      font-size: 18px;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <h2>Become a Data Bundle Agent</h2>
+    <p>Pay a one-time registration fee of <strong>₵50</strong></p>
+
+    <button onclick="payWithPaystack()">Pay ₵50 Now</button>
+  </div>
+
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <script>
+    function payWithPaystack() {
+      let handler = PaystackPop.setup({
+        key: "YOUR_PUBLIC_KEY",
+        email: "customer@email.com",
+        amount: 5000, // ₵50 = 5000 pesewas
+        currency: "GHS",
+        callback: function(response) {
+          // If payment successful → redirect to signup page
+          window.location.href = "signup.html?ref=" + response.reference;
+        },
+        onClose: function() {
+          alert("Payment cancelled");
+        }
+      });
+      handler.openIframe();
+    }
+  </script>
+
+</body>
+</html>
