@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account</title>
+  <style>
+    body { font-family: Arial; background: #f8f8f8; padding: 40px; }
+    .container {
+      max-width: 400px; margin: auto; background: white; padding: 30px;
+      border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.15);
+    }
+    input {
+      width: 100%; padding: 12px; margin-bottom: 15px;
+      border: 1px solid #ccc; border-radius: 6px;
+    }
+    button {
+      width: 100%; padding: 12px; background: #007bff; color: white;
+      border: none; border-radius: 6px; cursor: pointer; font-size: 16px;
+    }
+    a { text-decoration: none; color: #007bff; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Create Agent Account</h2>
+
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+
+  <button onclick="register()">Sign Up</button>
+
+  <p>Already have an account? <a href="login.html">Login</a></p>
+</div>
+
+<script>
+async function register() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const res = await fetch("https://YOUR_API_URL/signup_databundle", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
+
+  const data = await res.json();
+
+  if (res.ok) {
+    alert("Account created successfully!");
+    window.location.href = "login.html";
+  } else {
+    alert(data.error);
+  }
+}
+</script>
+
+</body>
+</html>
