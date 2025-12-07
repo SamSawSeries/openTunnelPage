@@ -1,64 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login</title>
 
   <style>
-    body { font-family: Arial; background: #f0f0f0; padding: 40px; }
+    body {
+      font-family: Arial;
+      background: #f0f0f0;
+      padding: 40px;
+    }
+
     .container {
-      max-width: 400px; margin: auto; background: white; padding: 30px;
-      border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.15);
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
     }
+
     input {
-      width: 100%; padding: 12px; margin-bottom: 15px;
-      border: 1px solid #ccc; border-radius: 6px;
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
     }
+
     button {
-      width: 100%; padding: 12px; background: #28a745; color: white;
-      border: none; border-radius: 6px; cursor: pointer;
+      width: 100%;
+      padding: 12px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
       font-size: 16px;
     }
-    a { text-decoration: none; color: #007bff; }
+
+    /* Loading Spinner */
+    .spinner {
+      border: 4px solid #fff;
+      border-top: 4px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+      margin: auto;
+      display: none;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      display: none;
+      font-size: 14px;
+      margin-top: 10px;
+      color: #28a745;
+      font-weight: bold;
+    }
+
+    a {
+      text-decoration: none;
+      color: #007bff;
+    }
   </style>
-
 </head>
+
 <body>
+  <div class="container">
+    <h2>Login</h2>
 
-<div class="container">
-  <h2>Login</h2>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
 
-  <input type="email" id="email" placeholder="Email">
-  <input type="password" id="password" placeholder="Password">
+    <button id="loginBtn" onclick="login()">Login</button>
 
-  <button onclick="login()">Login</button>
+    <div class="spinner" id="loader"></div>
+    <div class="loading-text" id="loadingText">Please wait...</div>
 
-  <p>No account? <a href="signup.html">Register</a></p>
-</div>
+    <p>No account? <a href="signup.html">Register</a></p>
+  </div>
 
-<script>
-async function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  <script>
+    async function login() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const btn = document.getElementById("loginBtn");
+      const loader = document.getElementById("loader");
+      const loadingText = document.getElementById("loadingText");
 
-  const res = await fetch("https://opentunnelfiles99.onrender.com/login_databundle", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
-  });
+      if (!email || !password) {
+        alert("Fill all fields");
+        return;
+      }
 
-  const data = await res.json();
+      // Show loading UI
+      btn.disabled = true;
+      btn.style.background = "#7ddb9c";
+      loader.style.display = "block";
+      loadingText.style.display = "block";
 
-  if (res.ok) {
-    alert("Login successful!");
-    localStorage.setItem("token", data.token);
-    window.location.href = "dashboard.html";
-  } else {
-    alert(data.error);
-  }
-}
-</script>
+      try {
+        const res = await fetch("https://opentunnelfiles99.onrender.com/login_databundle", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
 
+        const data = await res.json();
+
+        if (res.ok) {
+          alert("Login successful!");
+          localStorage.setItem("token", data.token);
+          window.location.href = "dashboard.html";
+        } else {
+          alert(data.error);
+        }
+      } catch (error) {
+        alert("Network error. Try again.");
+      }
+
+      // Hide loader & enable button
+      btn.disabled = false;
+      btn.style.background = "#28a745";
+      loader.style.display = "none";
+      loadingText.style.display = "none";
+    }
+  </script>
 </body>
 </html>
